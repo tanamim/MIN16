@@ -1,0 +1,16 @@
+*.class
+*.o
+*.qpf
+*.qsf
+*.qws
+*.log
+board/
+db/
+incremental_db/
+output_files/
+simulation/
+simbols/
+timing/
+.DS_Store
+dev/
+sftp-config.json
