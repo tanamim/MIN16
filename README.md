@@ -1,7 +1,48 @@
 Let's design your computer
 ===
 
-## Welcome to GitHub Pages
+## Step-by-step design guide
+
+1. [Register file](#register-file)
+2. Bit format
+3. Instruction Set Architecture
+4. Datapath for each instruction
+5. Assembly language
+6. Assembler
+7. Emulator
+8. CPU written by VHDL
+9. Compile on FPGA
+10. Load memory initialization file
+11. Run your program on your computer
+
+### 1. Register file
+How many registers do you need?
+
+### 2. Bit format
+How do you devide bits into parts?
+
+### 3. Instruction Set Architecture
+All assembly mnemonics should be defined.
+
+### 4. Datapath for each instruction
+
+### 5. Assembly language
+
+### 6. Assembler
+
+### 7. Emulator
+
+### 8. CPU written by VHDL
+
+### 9. Compile on FPGA
+
+### 10. Load memory initialization file
+
+### 11. Run your program on your computer
+
+
+
+### Welcome to Github Pages
 
 You can use the [editor on GitHub](https://github.com/tanamim/MIN16/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
