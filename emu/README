@@ -1,0 +1,14 @@
+This directory should contain all of the code for your emulator.
+
+ *
+ * Usage: ./emulator filename
+ *    
+ * `make run` to run this program
+ *
+ * set SIMU to 0 in common.h to turn off simulation mode, to run simple mode
+ * set SIMU to 1 in common.h to turn on display register mode
+ * set SIMU to 2 in common.h to turn on line-by-line execution mode
+ * 
+ * NOTE: For simulation, string output is char-by-char in green color.
+ *       The program stall until return key is hit to display next character.
+ *
