@@ -1,0 +1,725 @@
+##
+# CSCI E-93
+# Homework4 Solution
+#
+# Updated: 2017-12-30
+# Masakazu Tanami(tanami@g.harvard.edu)
+
+# r0  The constant value 0
+# at  Assembler Temporary
+# sp  Stack Pointer
+# fp  Frame Pointer
+# ra  Return Address
+# rb  General Use        - 2nd arguent
+# rc  General Use
+# rd  General Use        
+# s0  Saved Temporary    
+# s1  Saved Temporary    
+# t0  Temporary          - 1st argument
+# t1  Temporary          - return value
+# hi  High Part
+# lo  Low Part
+# pc  Program Counter
+# fl  Status Flag
+
+#
+# NOTE: autogen cause automatic increase of address and the amount of increase depends on type
+#       to avoid this, when the address gets larger, it's safe not to use J but use JR instead.
+# 
+# Example: Don't use 1, use 2 instead
+# 1)	BNE   $at, $r0, 2
+# 		J     0x400       (J takes < 0x3ff target address, so 0x400 causes autogen)
+# 		ADDI  $s0, 1      (BNE wants to branch here, but if autogen happens, the address increases)
+#       
+# 2)    ANDI  $s1, 0
+#   	ORI   $s1, 0x400  (This causes autogen before BNE)
+# 		BNE   $at, $r0, 2
+# 		JR    $s1         (Jump to Address $s1 never cause autogen, so it's safe)
+# 		ADDI  $s0, 1      (BNE address plus 2 words is here)
+#
+
+# Global Initialization
+ANDI  $sp, 0
+ORI   $sp, 0xf000
+ANDI  $fp, 0
+OR    $fp, $sp
+
+# Constants
+BIT_SERIAL_INPUTREADY:  .equ 1
+BIT_SERIAL_OUTPUTREADY: .equ 2
+REG_IOCONTOL:   .equ 0xff00
+REG_IOBUFFER_1: .equ 0xff04
+
+TEXT_AREA:        # keep current memory address before change memory address
+.org  0xe000      # static data
+CONST_prompt1: .asciiz "1st: "
+CONST_prompt2: .asciiz "2nd: "
+CONST_answer:  .asciiz "Ans: "
+CHAR_mem:      .space 16  
+.org TEXT_AREA    # restore text area memory address
+
+
+##
+# TEST HERE
+# Don't forget to call J PROGRAM_END to avoid infinite loop
+##
+
+# 
+# TEST for gethar and putchar
+# 
+# ORI  $t0, 'A'
+# JAL getchar
+# JAL putchar
+# J   PROGRAM_END
+
+# 
+# TEST for putString
+# 
+# CONST_prompt1: .asciiz "Please!"
+# ORI  $t0, CONST_prompt1
+# JAL putString
+# J   PROGRAM_END
+
+
+# TEST for getString and putString
+#
+# CHAR_str:  .space 32  # 16 chars because 1 word contain 1 char
+# ANDI $t0, 0
+# ORI  $t0, CHAR_str
+# JAL  getString
+# ANDI $t0, 0
+# ORI  $t0, CHAR_str
+# JAL  putString
+# J    PROGRAM_END
+
+# 
+# TEST for intToString - 65535 is 0xffff (-1), 32767 is 0x7fff (-0) 
+# 
+# ANDI  $t0, 0
+# ORI   $t0, 65535   # $t0 is original input value
+# ORI   $t0, -4032   # $t0 is original input value
+# ORI   $t0, 2*8       # $t0 is original input value
+# JAL   intToString
+# J     PROGRAM_END
+
+#
+# TEST for stringToInt
+#
+# CHAR_NUM: .asciiz "-2017"
+# ORI   $t0, CHAR_NUM
+# JAL   stringToInt
+# JAL   intToString
+# J     PROGRAM_END
+
+#
+# TEST for mul_10_plus - please add `JR $ra` to finish this subroutine
+#
+# ORI   $rc, 1
+# ORI   $rd, 6
+# JAL   mul_10_plus
+# J     PROGRAM_END
+
+# 
+# TEST for multiply
+# 
+# ANDI $t0, 0
+# ADDI $t0, -3
+# ANDI $rb, 0
+# ADDI $rb, -2
+# JAL  multiply
+# J    PROGRAM_END
+
+# 
+# TEST for multiply_service
+# 
+JAL   multiply_service
+J     PROGRAM_END
+
+
+## 
+# TEST ALU FLAGS HERE
+## 
+
+# 
+# TEST for ALU flags (ZF, SF, EQ)
+# 
+# ADD   $ra, $r0
+# ADDI  $ra, 0x7fff
+# ADDI  $ra, 0x8000
+# ADDI  $ra, 0
+# ORI  $ra, 0
+# BNE  $ra, $rb, 3
+
+# 
+# TEST for ALU flags (CF)
+# 
+# ADDI  $ra, 0xffff
+# ADDI  $rb, 0x1
+# ADDU  $rb, $ra
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8001
+# ADDU  $rb, $ra
+
+# ADDI  $ra, -1
+# ADDI  $rb, -2
+# SUBU  $ra, $rb
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8002
+# SUBU   $rb, $ra
+
+# 
+# TEST for ALU flags (OF)
+# 
+# ADDI  $ra, 0x7fff
+# ADDI  $rb, 0x1
+# ADD   $rb, $ra
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8001
+# ADD   $rb, $ra
+
+# ADDI  $ra, -1
+# ADDI  $rb, -2
+# SUB   $ra, $rb
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8002
+# SUB   $rb, $ra
+
+
+##
+# 2. (10 Points) Write a subroutine in your assembly language to output
+#    a single character on the output device.  The character may be
+#    stored in a register or in memory as appropriate for your
+#    architecture.
+
+# void putchar(char); // $ra = return address, char is from $t0
+
+putchar: 
+ADDI $sp, -6       # 6 byte
+SW   $sp, $ra, 2
+ANDI $at, 0
+OR   $at, $s0
+SW   $sp, $at, 1
+ANDI $at, 0
+OR   $at, $s1
+SW   $sp, $at, 0
+
+ANDI $ra, 0        # $ra = 0
+ANDI $rb, 0        # $rb = 0
+ANDI $rc, 0        # $rc = 0
+ANDI $rd, 0        # $rd = 0
+
+ORI  $ra, BIT_SERIAL_OUTPUTREADY
+ORI  $rb, REG_IOCONTOL     
+ORI  $rc, REG_IOBUFFER_1   
+OR   $rd, $t0      # $rd = character
+
+LB   $at, $rb, 0   # $at = $($rb)
+AND  $at, $ra      # $at & ra to check if ready to write
+BNE  $at, $ra, -2  # go back -2 words if $at != $ra
+SB   $rc, $rd, 0   # $($rc + 0) = $rd for one byte
+
+LW   $at, $sp, 0
+ANDI $s1, 0
+OR   $s1, $at
+LW   $at, $sp, 1
+ANDI $s0, 0
+OR   $s0, $at
+LW   $ra, $sp, 2   # restore $ra and return
+ADDI $sp, 6
+JR   $ra
+
+
+##
+# 3. (10 Points) Write a subroutine in your assembly language to input a
+#    single character from the input device.  The character will be
+#    returned in a register or in memory as appropriate for your
+#    architecture.
+
+# int getchar(void);  // $ra = return address, char will be stored to $t0
+
+getchar:
+ADDI $sp, -4       # 4 byte
+SW   $sp, $ra, 1
+ANDI $at, 0
+OR   $at, $s0
+SW   $sp, $at, 0
+
+ANDI $ra, 0        # $ra = 0
+ANDI $rb, 0        # $rb = 0
+ANDI $rc, 0        # $rc = 0
+ANDI $rd, 0        # $rd = 0
+
+ORI  $ra, BIT_SERIAL_INPUTREADY 
+ORI  $rb, REG_IOCONTOL     	
+ORI  $rc, REG_IOBUFFER_1   	
+
+LB   $at, $rb, 0   # $at = $($rb)
+AND  $at, $ra      # $at & ra to check if ready to write
+BNE  $at, $ra, -2  # go back -2 words if $at != $ra
+LB   $rd, $rc, 0   # $rd = $($rc + 0) for one character byte
+ANDI $t0, 0
+OR   $t0, $rd      # store char to return register
+
+LW   $at, $sp, 0
+ANDI $s0, 0
+OR   $s0, $at
+LW   $ra, $sp, 1   # restore $ra and return
+ADDI $sp, 4
+JR   $ra
+
+
+##
+# 4. (15 Points) Write a subroutine in your assembly language to output
+#    a sequence of characters (i.e., a string) stored in memory on the
+#    output device.
+
+# void putstring(char*);  // $ra = return address, string address is from $t0
+
+putString:
+ADDI $sp, -4       # 4 byte
+SW   $sp, $ra, 1
+ANDI $at, 0
+OR   $at, $s0
+SW   $sp, $at, 0
+
+ANDI $s0, 0        # $s0 = 0
+OR   $s0, $t0      # string counter
+
+putcharloop:
+ANDI $at, 0
+OR   $at, $s0      # prepare for load
+ANDI $rd, 0        # $rd = 0
+LB   $rd, $at, 0   # prepare a byte from in-memory
+ANDI $t0, 0
+OR   $t0, $rd      # set argument
+BEQ  $rd, $r0, 6   # branch if null character read
+JAL  putchar
+
+ADDI $s0, 2        # next char
+J    putcharloop   # load again
+ANDI $t0, 0        # put null char at the end
+JAL  putchar
+
+LW   $at, $sp, 0
+ANDI $s0, 0
+OR   $s0, $at
+LW   $ra, $sp, 1   # restore $ra and return
+ADDI $sp, 4
+JR   $ra
+
+
+
+##
+# 5. (15 Points) Write a subroutine in your assembly language to read an
+#    enter-terminated (i.e., line-feed) sequence of characters from the
+#    input device.  The string should be stored in memory after being
+#    read.
+
+# void getString(char*); // $ra = return address, memory address is $t0
+
+getString:
+ADDI $sp, -4       # 4 byte
+SW   $sp, $ra, 1
+ANDI $at, 0
+OR   $at, $s0
+SW   $sp, $at, 0
+
+ANDI $ra, 0
+ORI  $ra, BIT_SERIAL_INPUTREADY
+ANDI $rb, 0
+ORI  $rb, REG_IOCONTOL
+SB   $rb, $ra, 0   # Flush the serial port input queue to get ready for input
+
+ANDI $s0, 0        # $s0 = 0
+OR   $s0, $t0      # $s0 is address of char for string
+
+getcharloop:
+JAL  getchar
+ANDI $rd, 0
+OR   $rd, $t0      # copy getchar result $t0
+ANDI $rc, 0
+OR   $rc, $s0      
+SB   $rc, $rd, 0   # store one byte in $rd
+
+ADDI $s0, 2        # next char is 2 bytes away, because only lower word is used
+ANDI $at, 0
+ORI  $at, '\n'
+BEQ  $rd, $at, 2   # branch if '\n' character read
+J    getcharloop   # read again
+ANDI $rc, 0
+OR   $rc, $s0      
+SB   $rc, $r0, 0   # put null char to terminate
+
+ANDI $ra, 0
+ORI  $ra, BIT_SERIAL_INPUTREADY
+ORI  $ra, BIT_SERIAL_OUTPUTREADY
+ANDI $rb, 0
+ORI  $rb, REG_IOCONTOL
+SB   $rb, $ra, 0   # Flush the serial port input queue to get ready for input
+
+LW   $at, $sp, 0
+ANDI $s0, 0
+OR   $s0, $at
+LW   $ra, $sp, 1   # restore $ra and return
+ADDI $sp, 4
+JR   $ra
+
+
+
+##
+# 6. (25 Points) Write a subroutine in your assembly language to output
+#    a signed decimal integer on the output device.  Prior to outputting
+#    the value of the number, it will be stored as a signed 2-byte
+#    (16-bit) integer or as a signed 4-byte (32-bit) integer in
+#    two's-complement representation.  The integer may be stored in a
+#    register or in memory as appropriate for your architecture.
+
+# void intToString(int); // $ra = return address, int is at $t0
+
+intToString:
+ADDI  $sp, -2
+SW    $sp, $ra, 0   # save return address 
+
+ANDI  $rb, 0       # $rb is output value
+ANDI  $s0, 0       # $s0 is data to be processed
+OR    $s0, $t0
+ANDI  $s1, 0       # $s1 is FSM to keep number char is seen
+
+# negative handler
+ANDI  $ra, 0
+OR    $ra, $s0
+ANDI  $ra, 0x8000   # check if negative
+BNE   $ra, $r0, 2   # go to negative process
+J     digit5
+
+XORI  $s0, 0xffff   # flip bits
+ADDI  $s0, 1        # +1 to negate initial data
+ANDI  $t0, 0
+ORI   $t0, '-'      # set argument for putchar
+JAL   putchar       # put '-'
+J     digit5        # start looping for digit counts
+
+digitloop:          # process $rb = $s0/$rc, $s0 = $s0 % $rc
+ANDI  $at, 0    
+OR    $at, $s0      # $at is copy of $s0 to test
+SUB   $at, $rc
+SLT   $at, $r0      # test if data < divisor
+BNE   $at, $r0, 4   # go to next if data < divisor
+SUB   $s0, $rc
+ADDI  $rb, 1
+J     digitloop
+
+int_to_char:        # putchar($rb + '0') 
+ADDI  $rb, '0'
+ANDI  $t0, 0
+OR    $t0, $rb
+ANDI  $rb, 0        # reset to zero 
+ORI   $s1, 1        # FSM to keep char is written
+ADDI  $sp, -2       # store current $ra to $sp before JAL
+SW    $sp, $ra, 0
+JAL   putchar
+LW    $ra, $sp, 0
+ADDI  $sp, 2
+JR    $ra
+
+zeroHandler:       # put '0' when $s1 is zero
+ANDI  $at, 0
+OR    $at, $s1
+BNE   $at, $r0, 2  # BNE 0 means $s1 = 1 where number char is seen, so need to put '0'
+JR    $ra
+ANDI  $t0, 0
+ORI   $t0, '0'
+ADDI  $sp, -2      # store current $ra to $sp before JAL
+SW    $sp, $ra, 0
+JAL   putchar
+LW    $ra, $sp, 0
+ADDI  $sp, 2
+JR    $ra
+
+digit5:
+ANDI  $rc, 0
+ORI   $rc, 10000   # $rc is divisor
+ANDI  $at, 0
+OR    $at, $s0
+SLT   $at, $rc     # compare $s0 and divisor
+BNE   $at, $r0, 3  # BNE means branch if $s0 < 10000
+JAL   digitloop
+J     digit4
+JAL   zeroHandler
+
+digit4:
+ANDI  $rc, 0
+ORI   $rc, 1000
+ANDI  $at, 0
+OR    $at, $s0
+SLT   $at, $rc     # compare $s0 and divisor
+BNE   $at, $r0, 3  # BNE means branch if $s0 < 1000
+JAL   digitloop
+J     digit3
+JAL   zeroHandler
+
+digit3:
+ANDI  $rc, 0
+ORI   $rc, 100
+ANDI  $at, 0
+OR    $at, $s0
+SLT   $at, $rc     # compare $s0 and divisor
+BNE   $at, $r0, 3  # BNE means branch if $s0 < 100
+JAL   digitloop
+J     digit2
+JAL   zeroHandler
+
+digit2:
+ANDI  $rc, 0
+ORI   $rc, 10
+ANDI  $at, 0
+OR    $at, $s0
+SLT   $at, $rc     # compare $s0 and divisor
+BNE   $at, $r0, 3  # BNE means branch if $s0 < 10
+JAL   digitloop
+J     digit1
+JAL   zeroHandler
+
+digit1:
+ANDI  $rb, 0       # copy the rest of number $s0 to $rb 
+OR    $rb, $s0     # int_to_char takes $rb to put number char
+JAL   int_to_char
+
+LW   $ra, $sp, 0   # restore $ra
+ADDI $sp, 2        # restore $sp and return
+JR   $ra
+
+
+
+# 7. (25 Points) Write a subroutine in your assembly language to input a
+#    signed decimal integer from the input device.  The value of the
+#    number should be converted into a signed 2-byte (16-bit) integer or
+#    into a signed 4-byte (32-bit) integer in two's complement
+#    representation.  The integer will be returned in a register or in
+#    memory as appropriate for your architecture.
+
+# int stringToInt(char*); // $ra = return address, string is at $t0, int will be at $t0
+
+stringToInt:
+ADDI  $sp, -4       # 4 byte
+SW    $sp, $ra, 1   # save return address
+ANDI  $at, 0        # move $s0 to $at because SW is O_TYPE that
+OR    $at, $s0      # accepts registers r0|at|sp|fp|ra|rb|rc|rd
+SW    $sp, $at, 0   # saved register $s0 will be used
+
+ANDI  $s0, 0        # FSM to check if '-' is seen
+ANDI  $rc, 0        # keeps integer
+ANDI  $rd, 0        # $rd keeps char from getString
+
+check_negative:
+ANDI  $rb, 0
+ORI   $rb, str_to_int # $rb stores jump address that would cause autogen
+ANDI  $at, 0
+OR    $at, $t0
+LB    $rd, $at, 0
+ANDI  $at, 0
+ORI   $at, '-'
+BNE   $at, $rd, 3   # go to str_to_int after check negative FSM
+ORI   $s0, 1
+ADDI  $t0, 2        # prepare for next char reading
+JR    $rb
+# J     str_to_int
+                     
+mul_10_plus:        # $rc = (($rc << 3) + ($rc << 1)) + $rd
+ANDI  $at, 0
+OR    $at, $rc
+SLLI  $at, 1        # $at is $rc << 1
+ADD   $rd, $at
+SLLI  $at, 2        # $at is $rc << 3
+ADD   $rd, $at
+ANDI  $rc, 0
+OR    $rc, $rd      # copy result to $rc
+JR    $rb
+# J     str_to_int
+
+str_to_int:
+ANDI  $at, 0
+OR    $at, $t0        # load byte char from memory at $t0
+ANDI  $rd, 0
+LB    $rd, $at, 0     # $rd = $($t0 + 0) for one byte
+ANDI  $s1, 0
+ORI   $s1, generate_int # $s1 stores jump address that would cause autogen
+ANDI  $at, 0
+ORI   $at, 0          # 0 is null char
+BNE   $at, $rd, 2     # check if char $rd is null character
+JR    $s1
+# J     generate_int
+ANDI  $at, 0
+ORI   $at, 10         # ascii code for newline '\n'
+# ORI   $at, '\n'
+BNE   $at, $rd, 2     # check if char $rd is new line 
+JR    $s1
+# J     generate_int
+ADDI  $t0, 2          # prepare for reading next char
+ANDI  $rd, 0x000f     # convert number char to number
+J     mul_10_plus     # $rc = 10 * $rc + $rd
+
+generate_int:
+ANDI  $t0, 0
+ORI   $t0, move_to_t0 # $t0 stores jump address that would cause autogen
+ANDI  $at, 0
+OR    $at, $s0
+BNE   $at, $r0, 2     # need to handle negative if s0 is not zero
+JR    $t0     
+# J     move_to_t0      # [NOTE] This cause autogen and affects tag address mismatch.
+XORI  $rc, 0xffff
+ADDI  $rc, 1          # negate. -$rc = ~$rc + 1
+
+move_to_t0:
+ANDI  $t0, 0
+OR    $t0, $rc
+
+LW    $at, $sp, 0   
+ANDI  $s0, 0
+OR    $s0, $at      # restore $s1
+LW    $ra, $sp, 1   # restore $ra 
+ADDI  $sp, 4        # restore $sp and return
+JR    $ra
+
+
+
+# 8. (50 Points) Write a subroutine in your assembly language to
+#    multiply two signed integers (the multiplicand multiplied by the
+#    multiplier) and return the resulting signed integer product.  The
+#    minimum requirement is for the multiplicand, the multiplier, and
+#    the product to all be 16-bit signed integer words.  However, you
+#    are welcome to implement extended precision (for example, to
+#    multiply two 16-bit words to produce a 32-bit doubleword product or
+#    to multiply two 32-bit doublewords to produce either a 32-bit
+#    doubleword or a 64-bit quadword product), but that is not required.
+
+# int multiply(int a, int b): // $t0 = a, $rb = b (caller saved), result will be at $t0
+
+multiply:
+ADDI  $sp, -2
+SW    $sp, $ra, 0 
+
+ANDI  $s0, 0        # FSM to check negative seen 0/1/2 times
+ANDI  $at, 0        # assembler temporary
+ANDI  $ra, 0
+OR    $ra, $t0      # copy int a for multiplication base
+ANDI  $t0, 0        # collect temporary answer
+
+check_arg_a:
+ANDI  $s1, 0        # $s1 stores jump address that would cause autogen
+ORI   $s1, check_arg_b
+ANDI  $at, 0
+ORI   $at, 0x8000   # leftmost bit check bit
+AND   $at, $ra      # mask $ra to check negative sign for a
+BNE   $at, $r0, 2   # branch if negative
+JR    $s1
+ADDI  $s0, 1        # mark as negative (+1)
+XORI  $ra, 0xffff
+ADDI  $ra, 1        # negate  a
+
+check_arg_b:
+ANDI  $s1, 0        # $s1 stores jump address that would cause autogen
+ORI   $s1, multloop
+ANDI  $at, 0        # reset to check negative sign for b
+ORI   $at, 0x8000
+AND   $at, $rb      # mask $rb to check negative sign for b
+BNE   $at, $r0, 2
+JR    $s1
+ADDI  $s0, 1        # mark as negative ($s0 is now 1 or 2)
+XORI  $rb, 0xffff
+ADDI  $rb, 1
+
+multloop:           # $t0 keeps track of potential result
+ANDI  $t1, 0        # $t1 stores jump address that would cause autogen
+ORI   $t1, handle_negative
+BNE   $rb, $r0, 2   # exit loop if $rb is zero
+JR    $t1           # $t1 is handle_negative
+ADD   $t0, $ra
+ADDI  $rb, -1
+JR    $s1           # $s1 is multloop
+
+handle_negative:
+ANDI  $rd, 0        # test if $s0 is 1 (0 or 2 means result is positive)
+OR    $rd, $s0
+ANDI  $rc, 0
+ADDI  $rc, 1
+
+ANDI  $s1, 0        # $s1 store address > 0x3ff that cause autogen for Jump
+ORI   $s1, mult_end 
+BEQ   $rc, $rd, 2   # branch if negative sign is 1
+JR    $s1
+XORI  $t0, 0xffff
+ADDI  $t0, 1        # negate $at
+
+mult_end:
+LW    $ra, $sp, 0   # restore $ra and return
+ADDI  $sp, 2
+JR    $ra
+
+
+
+# 9. (20 Points) Write the main program in your assembly language to
+#    prompt (i.e. output a string to request input) a user to enter two
+#    signed decimal integers and to multiply one by the other and then
+#    to output the resulting integer product in decimal.  The integers
+#    must be able to represent values from -32768 to 32767, but may
+#    represent a larger range of integer values.
+
+# service(void): // $ra = return address, $rb * $rc will be stored at $t0 and putString
+
+multiply_service:
+ADDI  $sp, -2
+SW    $sp, $ra, 0 
+
+ANDI  $t0, 0
+ORI   $t0, CONST_prompt1  # prompt to input first number
+JAL   putString
+
+ANDI  $t0, 0
+ORI   $t0, CHAR_mem       # string buffer for multiplicand
+JAL   getString
+ANDI  $t0, 0
+ORI   $t0, CHAR_mem
+JAL   stringToInt
+
+ANDI  $s0, 0              # save for multiply
+OR    $s0, $t0
+ANDI  $t0, 0
+ORI   $t0, CONST_prompt2  # prompt to input second number
+JAL   putString
+
+ANDI  $t0, 0
+ORI   $t0, CHAR_mem       # string buffer for multiplier
+JAL   getString
+ANDI  $t0, 0
+ORI   $t0, CHAR_mem
+JAL   stringToInt
+
+ANDI  $rb, 0
+OR    $rb, $s0            # set multiplier to $rb
+JAL   multiply            # multiplicand is already set at $t0 
+
+ANDI  $s0, 0
+OR    $s0, $t0            # save answer
+ANDI  $t0, 0
+ORI   $t0, CONST_answer
+JAL   putString
+ANDI  $t0, 0
+OR    $t0, $s0
+JAL   intToString         # output answer as string
+
+ANDI  $t0, 0
+ORI   $t0, 10             # add '\n'
+JAL   putchar
+
+LW    $ra, $sp, 0         # restore $ra and return
+ADDI  $sp, 2
+JR    $ra
+
+
+
+PROGRAM_END:

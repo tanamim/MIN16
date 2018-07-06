@@ -1,0 +1,402 @@
+##
+# CSCI E-93
+#
+# Test Script
+
+ADD $r0, $at  # abc
+MUL $r0, $at # abcd
+
+# MUL $r0, $at, $r0  # error
+# MUL $r0, $at, $r1  # error
+JR $t0
+MFHI $r0
+MFHI $r0 # abc
+
+# NOTE
+# ADD $r0, $at, hoge0 # error
+# ADD $r0, $at, hoge1 # error
+# ADD $r0, $at, hoge # error
+MUL $r0, $at
+
+J 0x0ff #abc
+JAL 0x0ff #abc
+
+LW $r0, $at, 0xf  # ok
+BEQ $ra, $rb, 0x4 # ok
+
+label1: .equ 0x8
+ADD $r0, $at  # abc
+label2: # hoge2
+MUL $r0, $at # abcd
+label1: # hoge1
+MULI $r0, 0x7 # abcd
+
+SUBI $r0, 0x7 # abcd
+SUBI $r0, 63 # abcd
+SUBI $r0, 0b111 # abcd
+
+LW $r0, $r0, 0xf
+LW $r0, $r0, 15
+LW $r0, $r0, 0b1111
+
+JAL 0x00f #abc
+JAL 15 #abc
+JAL 0b00001111 #abc
+JAL 1023 #abc
+
+
+.space 8
+
+
+label1:
+SUBI $r0, 0x7     # after label1
+label2: .equ 0x8
+SUBI $r0, 63      # after label2: .equ 0x8
+label3: .equ $ + 0xfb
+SUBI $r0, 0b1 + 0b11 # after label3: .equ $ + 0xfb
+.org 0xf000 | 0x0700 
+ADDI $r0, label1     # 0
+ADDI $r0, label2     # 8
+ADDI $r0, label3     # 255
+ADDI $r0, label2 * 4 # 32
+.space 0x100  
+ADDI $r0, $      # after .space 0x100
+ADDI $r0, $ + 0x01
+label4: .equ 'a'     # 97 0b0110 0001
+ADDI $r0, 0xa
+ADDI $r0, '\n'
+ADDI $r0, 'a'
+.align 5
+ADDI $r0, 0xf    # after .align 5
+.org 0x2
+label5: ADDI $r0, 0x1
+        ADDI $r0, label5  # hoge
+        ADDI $r0, label4
+label6: .equ 0x4  
+SUBI $r0, $
+SUBI $r0, label6
+SUBI $r0, label6 * 2
+
+
+.org 0x00f0
+.word 0x0001 0x0002 0x0003  # .word
+.byte 0x01 0x02 0x03 # .byte
+.org 0x0000
+.half 0x08 0x09 0x0a 0x0b
+
+
+.ascii  "hello!"
+.asciiz "hello!" # test .ascii "hoge"
+
+ADDI $rd, 0b111111
+SUBI $rd, 0b1111111  # too big
+
+
+# Too big number
+ADDI $r0, 0b100000
+ADDI $r0, 0b1000000 # too big
+ADDI $r0, -1 # too big
+
+
+ADDI $rd, 0b111111
+SUBI $rd, 0b1111111  # too big
+
+J 0b1111111111
+J 0b11111111111  # too big
+J -1  # too big
+
+JAL 0b1111111111
+JAL 0b11111111111  # too big
+JAL -1
+
+BEQ $r0, $r0, 0b1111
+BEQ $r0, $r0, 0b11111  # too big
+BEQ $r0, $r0, -1  # too big
+
+BNE $r0, $r0, 0b1111
+BNE $r0, $r0, 0b11111  # too big
+BNE $ra, $rb, -1  # too big
+
+LW $ra, $rb, 0b1111
+LW $ra, $rb, 0b11111 # too big
+LW $ra, $rb, 16 # too big
+
+SB $ra, $rb, 0b1111
+SB $ra, $rb, 0b11111 # too big
+SB $ra, $rb, -1 # too big
+
+
+ADD $at, $r0
+tag: .space 8
+ADDI $r0, tag
+
+
+tag0: asciiz "yo"
+AND $r0, $r0
+tag1: .space 14 
+tag2: 
+ADDI $r0, tag1
+ADDI $r0, tag2
+ADDI $r0, $
+
+
+ORI $at, 0b111111
+ORI $at, '0'
+CONST_prompt1: .asciiz "Please enter the first number: "
+ORI $at, $
+
+.org 0x0020
+tag: .asciiz "b: "
+ADDI $r0, tag
+CONST_prompt1: .asciiz "a: "
+
+
+# Test for auto-gen and label tag address match
+.org 0x001d
+ADDI $r0, tag
+ADDI $r0, tag2
+ADDI $r0, tag
+
+tag: ADDI  $r0, tag3
+tag2: ADDI $r0, 1
+CONST_prompt1: .asciiz "a: "
+tag: .asciiz "b: "
+ADDI $r0, tag
+ADDI $ra, tag2
+tag3: ADD $ra, $r0
+tag4: ADDI $ra, tag2
+
+# Test2
+.org 0x001d
+ADDI $r0, tag
+ADDI $r0, tag
+# ORI  $r0, tag2
+# JAL  tag2
+# LW $r0, $r0, 0
+
+tag: .asciiz "b: "
+
+ADDI $r0, tag2
+
+tag2: ADDI $r0, 1
+
+
+
+
+
+## 
+# VHDL: TEST ALU FLAGS HERE
+## 
+
+# 
+# TEST for ALU flags (ZF, SF, EQ)
+# 
+# ADD   $ra, $r0
+# ADDI  $ra, 0x7fff
+# ADDI  $ra, 0x8000
+# ADDI  $ra, 0
+# ORI  $ra, 0
+# BNE  $ra, $rb, 3
+
+# 
+# TEST for ALU flags (CF)
+# 
+# ADDI  $ra, 0xffff
+# ADDI  $rb, 0x1
+# ADDU  $rb, $ra
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8001
+# ADDU  $rb, $ra
+
+# ADDI  $ra, -1
+# ADDI  $rb, -2
+# SUBU  $ra, $rb
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8002
+# SUBU   $rb, $ra
+
+# 
+# TEST for ALU flags (OF)
+# 
+# ADDI  $ra, 0x7fff
+# ADDI  $rb, 0x1
+# ADD   $rb, $ra
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8001
+# ADD   $rb, $ra
+
+# ADDI  $ra, -1
+# ADDI  $rb, -2
+# SUB   $ra, $rb
+
+# ADDI  $ra, 0x8001
+# ADDI  $rb, 0x8002
+# SUB   $rb, $ra
+
+
+##
+#  VHDLDEV TEST CODE
+## 
+
+# 
+# TEST for ALU operations
+# 
+
+# ANDI $ra, 0
+# ANDI $rb, 0
+
+# ADDI $t0, 1
+# ADDI $t1, 3
+# ADD  $ra, $t1  # 3
+# SUB  $ra, $t0  # 2
+# MUL  $ra, $t1  # 6
+# SLT  $t1, $ra  # 1
+
+# ADDI $ra, 3
+# SUBI $ra, 1
+# MULI $ra, 3
+# SLTI $t1, 6  # 1
+# SLTI $t1, 2  # 1
+# SLTI $t1, 0  # 0
+# SLTI $t1, -1 # 0
+# SLTI $t1, 2  # 1
+# SLTI $t1, -1 # 0
+# ADD  $ra, $t0
+# SUBI $ra, -3
+# SLTI $t0, -3  # 0
+# SLTIU $t0, -3  # 1
+
+
+# ADDI $ra, -3  # -3
+# SUBI $t0, -1  #  2 
+# MULI $ra, -2  #  6 
+# MULI $t0, -1  # -2
+# SLTI $t0, -2  #  0
+
+# ADDU  $ra, $t1  # 3
+# SUBU  $ra, $t0  # 2
+# MULU  $ra, $t1  # 6
+# SLTU  $t1, $ra  # 1
+
+# ADDIU $ra, 3 # 3
+# SUBIU $ra, 1 # 2
+# MULIU $ra, 3 # 6
+# SLTIU $t1, 6 # 1
+
+# ADDI $ra, 6
+# ADDI $rb, 1
+# J    0x6
+# JR   $ra
+
+# TEST for BNE, BEQ
+# ADDI $ra, 5
+# ADDI $rb, 1
+# BNE  $rb, $ra, -1
+# BEQ  $rb, $ra, 2
+# ADDI $rb, 4
+# ADDI $rb, 8
+
+# TEST for J
+# AND  $t1, $r0
+# ADDI $t0, 1
+# ADDI $t1, 0x64
+# ADD  $t1, $t0
+# J    0x0004
+# ADDI $t1, 16 
+
+# TEST for JR, JAL
+# ADDI $t1, 1
+# ADDI $t1, 2
+# ADDI $t1, 3
+# ADDI $t1, 4
+# ADDI $t1, 5
+# JAL  0x20
+# ADDI $t0, 1
+# ADDI $t0, 2
+# ADDI $t0, 3
+# ADDI $t0, 4
+# ADDI $t0, 5
+# ADDI $t0, 16
+# ADDI $t0, 17
+# ADDI $t0, 18
+# ADDI $t0, 19
+# ADDI $t0, 20
+# JR   $ra
+
+
+# TEST JAL
+# ANDI $t0, 0
+# JAL  0x6
+# ADDI $t0, 0x10
+# ADDI $ra, 0
+# JR   $ra
+
+
+# TSET JALR
+# ADDI  $rd, 2
+# ADDI  $t0, 1
+# JALR  $rd, $rb
+# ANDI  $rd, 0
+
+
+# TEST for SW, SB
+# ADDI $ra, 0x0
+# ADDI $ra, 0x1
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+
+# ADDI $rd, 0x6
+# SW   $rd, $ra, 0  # 6, 41
+# ADDI $ra, 0x1
+# SW   $rd, $ra, -1  # 6, 41
+# ADDI $ra, 0x1
+# SW   $rd, $ra, -2  # 6, 41
+
+# # SW   $rd, $ra, 0  # 6, 41
+# ADDI $rd, 0       # 6
+
+
+# TEST for SW, SB, LW, LB
+# ADDI $rb, 0x2
+# LB   $rd, $rb, 0
+# LW   $rd, $rb, 0
+# ADDI $rd, 0
+
+
+# TEST for serial communication
+# ADDI $ra, 0x0
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+# ADDI $ra, 0x10
+
+# ADDI $rd, 0xff04  # serial_char_io_dataport
+# # ADDI $rd, 0xff08  # LCD_char_io_dataport (TODO: double chars printed at once)
+# ADDI $rc, 0x5a    # 'Z'
+
+# ADDI $ra, 0x1
+# SB   $rd, $ra, 0  # 6, 41++    ('A', 'B', 'C',...)
+# # SW   $rd, $ra, 0  # 6, 41++
+# BNE  $ra, $rc, -2
+
+
+# TEST for sp
+# ORI  $sp, 0xf000
+# ADDI $ra, 0x12
+
+# putchar: 
+# ADDI $sp, -6       # 6 byte
+# SW   $sp, $ra, 2
+
+# ANDI $ra, 0        # reset
+
+# LW   $ra, $sp, 2   # restore $ra and return
+# ADDI $sp, 6
+# JR   $ra
+
+
