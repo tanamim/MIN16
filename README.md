@@ -1,7 +1,10 @@
 Let's design your computer
 ===
 
-## Step-by-step design guide
+## Introduction
+    This document provides an overview of the development process from designing a computer processor to build onto a chip via programmable way. Field Programmable Gate Array (FPGA) is used to actually build a chip. In this repository, source code for MIN16 processor and useful tools are provided.
+
+## Step-by-Step Guide
 
 1. [Register file](#1-register-file)
 2. Bit format
