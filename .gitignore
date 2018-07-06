@@ -6,6 +6,7 @@
 *.log
 board/
 db/
+cscie93/
 incremental_db/
 output_files/
 simulation/
