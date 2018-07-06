@@ -6,42 +6,49 @@ This document provides an overview of the development process from designing a c
 
 ## Step-by-Step Guide
 
-1. [Register file](#1-register-file)
-2. Bit format
-3. Instruction Set Architecture
-4. Datapath for each instruction
-5. Assembly language
-6. Assembler
-7. Emulator
-8. CPU written by VHDL
-9. Compile on FPGA
-10. Load memory initialization file
-11. Run your program on your computer
+- [Let's design your computer](#lets-design-your-computer)
+    - [Introduction](#introduction)
+    - [Step-by-Step Guide](#step-by-step-guide)
+        - [Register file](#register-file)
+        - [Bit format](#bit-format)
+        - [Instruction Set Architecture](#instruction-set-architecture)
+        - [Datapath for instruction](#datapath-for-instruction)
+        - [Assembly language](#assembly-language)
+        - [Assembler](#assembler)
+        - [Emulator](#emulator)
+        - [CPU written by VHDL](#cpu-written-by-vhdl)
+        - [Compile on FPGA](#compile-on-fpga)
+        - [Load memory initialization file](#load-memory-initialization-file)
+        - [Run your program](#run-your-program)
+        - [Welcome to Github Pages](#welcome-to-github-pages)
+        - [Markdown](#markdown)
+        - [Jekyll Themes](#jekyll-themes)
+        - [Support or Contact](#support-or-contact)
 
-### 1. Register file
+### Register file
 How many registers do you need?
 
-### 2. Bit format
+### Bit format
 How do you devide bits into parts?
 
-### 3. Instruction Set Architecture
-All assembly mnemonics should be defined.
+### Instruction Set Architecture
+All assembly mnemonics should be defin
 
-### 4. Datapath for each instruction
+### Datapath for instruction
 
-### 5. Assembly language
+### Assembly language
 
-### 6. Assembler
+### Assembler
 
-### 7. Emulator
+### Emulator
 
-### 8. CPU written by VHDL
+### CPU written by VHDL
 
-### 9. Compile on FPGA
+### Compile on FPGA
 
-### 10. Load memory initialization file
+### Load memory initialization file
 
-### 11. Run your program on your computer
+### Run your program
 
 
 
