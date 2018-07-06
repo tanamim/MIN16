@@ -3,7 +3,7 @@ Let's design your computer
 
 ## Step-by-step design guide
 
-1. [Register file](#register-file)
+1. [Register file](#1-register-file)
 2. Bit format
 3. Instruction Set Architecture
 4. Datapath for each instruction
