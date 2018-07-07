@@ -2,27 +2,25 @@ Let's design your computer
 ===
 
 ## Introduction
+
 This document provides an overview of the development process from designing a computer processor to build onto a chip via programmable way. Field Programmable Gate Array (FPGA) is used to actually build a chip. In this repository, source code for MIN16 processor and useful tools are provided.
 
 ## Table of Contents
-- [Let's design your computer](#lets-design-your-computer)
-    - [Introduction](#introduction)
-    - [Table of Contents](#table-of-contents)
-        - [Register file](#register-file)
-        - [Bit format](#bit-format)
-        - [Instruction Set Architecture](#instruction-set-architecture)
-        - [Datapath for instruction](#datapath-for-instruction)
-        - [Assembly language](#assembly-language)
-        - [Assembler](#assembler)
-        - [Emulator](#emulator)
-        - [CPU written by VHDL](#cpu-written-by-vhdl)
-        - [Compile on FPGA](#compile-on-fpga)
-        - [Load memory initialization file](#load-memory-initialization-file)
-        - [Run your program](#run-your-program)
-        - [Welcome to Github Pages](#welcome-to-github-pages)
-        - [Markdown](#markdown)
-        - [Jekyll Themes](#jekyll-themes)
-        - [Support or Contact](#support-or-contact)
+1. [Register file](#register-file)
+2. [Bit format](#bit-format)
+3. [Instruction Set Architecture](#instruction-set-architecture)
+4. [Datapath for instruction](#datapath-for-instruction)
+5. [Assembly language](#assembly-language)
+6. [Assembler](#assembler)
+7. [Emulator](#emulator)
+8. [CPU written by VHDL](#cpu-written-by-vhdl)
+9. [Compile on FPGA](#compile-on-fpga)
+10. [Load memory initialization file](#load-memory-initialization-file)
+11. [Run your program](#run-your-program)
+12. [Welcome to Github Pages](#welcome-to-github-pages)
+13. [Markdown](#markdown)
+14. [Jekyll Themes](#jekyll-themes)
+15. [Support or Contact](#support-or-contact)
 
 ### Register file
 How many registers do you need?
