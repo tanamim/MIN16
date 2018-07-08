@@ -26,13 +26,6 @@ This document provides an overview of the development process from designing a c
 ### Building blocks
 
 The development process comes with these 4 building blocks and goes in this order.
-| Directory | Description |
-| --------- |------------ |
-| doc       | Design documents and presentation materials are stored in this directory. [Instruction Set](./doc/MIN16_Instruction_Set.pdf) defines assembly language and its usage. This is a reference document for assembly programmer. [Datapath](./doc/MIN16_Datapath_ALL.pdf) defines digital circuit board and visualize how each instruction works on the board. |
-| asm       | [Assembler](./asm/parser/parser.c) is a tool to convert assembly program into machine language. |
-| emu       | [Emulator](./emu/emulator.c) is a useful debugging tool to simulate assembly program on MIN16 processor |
-| cpu       | This directory contains all of the VHDL for [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
-
 
 | Directory | Description |
 | --------- |------------ |
@@ -40,12 +33,6 @@ The development process comes with these 4 building blocks and goes in this orde
 | asm       | [Assembler](./asm/parser/parser.c) is a tool to convert assembly program into machine language. |
 | emu       | [Emulator](./emu/emulator.c) is a useful debugging tool to simulate assembly program on MIN16 processor |
 | cpu       | This directory contains all of the VHDL for [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
-
-
-| First Header     | Second Header     |
-| ---------------- | ----------------- |
-| Content cel 1    | Content cell 2    |
-| Content column 1 | Content columun 2 |
 
 ### Register file
 How many registers do you need?
