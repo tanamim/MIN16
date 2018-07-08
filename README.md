@@ -12,9 +12,9 @@ The development process comes with these 4 building blocks and goes in this orde
 | Directory | Description |
 | --------- |------------ |
 | doc       | Design documents and presentation materials are stored in this directory. [Instruction Set](./doc/MIN16_Instruction_Set.pdf) defines assembly language and its usage. This is a reference document for assembly programmer. [Datapath](./doc/MIN16_Datapath_ALL.pdf) defines digital circuit board and visualize how each instruction works on the board. |
-| asm       | [Assembler](./asm/parser/parser.c) is a tool to convert [assembly program](./asm/parser/sample3.txt) into [machine language](./asm/parser/sample3.mif). |
-| emu       | [Emulator](./emu/emulator.c) is a useful debugging tool to simulate assembly program on MIN16 processor |
-| cpu       | This directory contains all of the VHDL for [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
+| asm       | [Assembler](./asm/parser/parser.c) is a tool to convert an [assembly program](./asm/parser/sample3.txt) into a [machine code](./asm/parser/sample3.mif). |
+| emu       | [Emulator](./emu/emulator.c) is a useful debugging tool that can simulate on your computer how assembly program should work on the MIN16 processor |
+| cpu       | This directory contains all of the VHDL for the [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
 
 ## Table of Contents
 1. [Register file](#register-file)
