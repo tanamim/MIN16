@@ -37,8 +37,8 @@ The development process comes with these 4 building blocks and goes in this orde
 | Directory | Description |
 | --------- |------------ |
 | doc       | Design documents and presentation materials are stored in this directory. [Instruction Set] defines assembly language and its usage. This is a reference document for assembly programmer. [Datapath] defines digital circuit board and visualize how each instruction works on the board. |
-| asm       | [Assembler] is a tool to convert assembly program into machine language. |
-| emu       | [Emulator] is a useful debugging tool to simulate assembly program on MIN16 processor |
+| asm       | [Assembler](./asm/parser/parser.c) is a tool to convert assembly program into machine language. |
+| emu       | [Emulator](./emu/emulator.c) is a useful debugging tool to simulate assembly program on MIN16 processor |
 | cpu       | This directory contains all of the VHDL for [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
 
 
