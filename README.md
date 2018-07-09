@@ -38,7 +38,7 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
 ## Design Documents
 
 ### Design Bit format
-The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown beloc, typical arithmetic instruction contains three components, `Operation Code`, `Destination Regiser`, and `Source Register`.
+The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown beloc, typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
 For a general example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `001a`.
 ```C
