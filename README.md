@@ -24,6 +24,8 @@ This document provides an overview of the development process from designing a c
 10. [Compile and build on the FPGA board](#compile-and-build-on-the-fpga-board)
 11. [Import program to memory on the FPGA board](#import-program-to-memory-on-the-fpga-board)
 12. [Run your program](#run-your-program)
+13. [Future Topic](#future-topic)
+
 
 ### Building blocks
 
@@ -154,8 +156,13 @@ Last step is to import mif file and write data to In-System memory.
 
 2. Write to In-System Memory
 
-    Note that the In-System memory data `6080` `22C0` `2040` is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
+    Note that the In-System memory data `6080` `22C0` `2040`... is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
     ![MIN16_mif_write](./doc/MIN16_mif_write.png)
 
 ### Run your program
+Now you can run your program! FPGA board comes with switches, buttons, and 7-segment LED. So you may want to set diagnostic pin assignments.
 
+![MIN16_Diagnosis](./doc/MIN16_Diagnosis.png)
+
+### Future Topic
+Writing assembly program might be time consuming, therefore a compiler would be helpful for faster development.
