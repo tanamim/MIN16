@@ -1,35 +1,13 @@
-Let's design your computer
+Let's design your CPU
 ===
 
-## Introduction
+### Introduction
 
 This document provides an overview of the development process from designing a computer processor to build onto a chip via programmable way. Field Programmable Gate Array ([FPGA](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)) is used to actually build a chip. The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, source code for MIN16 processor, sample assembly program, and useful tools are provided.
 
-## Table of Contents
-1. [Building blocks](#building-blocks)
-2. [Bit format](#bit-format)
-3. [Register file](#register-file)
-4. [Instruction Set Architecture](#instruction-set-architecture)
-5. [Datapath for instruction](#datapath-for-instruction)
-6. [Assembly language](#assembly-language)
-7. [Assembler](#assembler)
-8. [Emulator](#emulator)
-    1. [Simple mode](#simple-mode)
-    2. [Display register mode](#display-register-mode)
-    3. [Line-by-line execution mode](#line-by-line-execution-mode)
-9. [CPU written by VHDL](#cpu-written-by-vhdl)
-    1. [Sequencing Logic](#sequencing-logic)
-    2. [Clocking Scheme](#clocking-scheme)
-    3. [State transitions on Memory and CPU](#state-transitions-on-memory-and-cpu)
-10. [Compile and build on the FPGA board](#compile-and-build-on-the-fpga-board)
-11. [Import program to memory on the FPGA board](#import-program-to-memory-on-the-fpga-board)
-12. [Run your program](#run-your-program)
-13. [Future Topic](#future-topic)
+### Four Steps
 
-
-### Building blocks
-
-The development process comes with these 4 building blocks and goes in this order. The first step is to determine **word size** (i.e. how many bits are bound together to carry machine instruction on a digital circuit board). Then you will design bit format to prepare a set of instructions (Assembly language: `AND`, `OR`, `ADD`, `J`, etc). Such design document serves as a reference to assembly programmers. Once assembly language is ready, you need to build an assembler to convert to machine code. Emulator is quite useful to debug your assembler programs before CPU will be working correctly. Finally, CPU is described by hardware description language and should be debugged by your assembly program. You will burn your CPU to an FPGA board, load machine code to the memory, and run the program.
+Design instruction set and datapath -> Make assembler -> Debug with emulator -> Build CPU
 
 | Directory | Description |
 | --------- |------------ |
@@ -38,8 +16,28 @@ The development process comes with these 4 building blocks and goes in this orde
 | emu       | [Emulator](./emu/emulator.c) is a useful debugging tool that can simulate on your computer how assembly program should work on the MIN16 processor |
 | cpu       | This directory contains all of the VHDL for the [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
 
-### Bit format
-Once word size is determined, how do you divide those bits into parts? Typical arithmetic machine instruction contains three components, Operation Code, Destination Regiser Identifier, and Source Register Identifier.
+
+# Table of Contents
+1. [Design Documents](#design-documents)
+    1. [Design Bit format](#design-bit-format)
+    2. [Determine Register File](#determine-register-file)
+    3. [Document Instruction Set Architecture](#document-instruction-set-architecture)
+    4. [Draw Datapath for Instructions](#draw-datapath-for-instructions)
+2. [Assembler](#assembler)
+    1. [Detrmine Instruction Format](#detrmine-instruction-format)
+    2. [Build a Tool Following Assembler Concepts](#build-a-tool-following-assembler-concepts)
+3. [Emulator](#emulator)
+4. [CPU](#cpu)
+    1. [Code with Hardware Discription Language](#code-with-hardware-discription-language)
+    2. [Compile and build on the FPGA board](#compile-and-build-on-the-fpga-board)
+    3. [Import program to memory on the FPGA board](#import-program-to-memory-on-the-fpga-board)
+    4. [Run your program](#run-your-program)
+
+
+## Design Documents
+
+### Design Bit format
+The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? Typical arithmetic machine instruction contains three components, Operation Code, Destination Regiser Identifier, and Source Register Identifier.
 
 For a general example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `0x001a`.
 ```markdown
@@ -54,25 +52,27 @@ For a general example, `ADD $r1, $r10` is an instruction to add the value of sou
 +---------------+--------------+---------------+---------------+
 ```
 
-### Register file
+### Determine Register File
 How many registers do you need? Above example uses 4bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operation codes. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2).
 
-### Instruction Set Architecture
+### Document Instruction Set Architecture
 All assembly mnemonics should be defined. In addition to ALU type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, etc), Memory Load and Store type instructions are needed (`LW`, `SW`) so that computer can interact with external input/output device. Also, Jump and Branch instructions (`J`, `JR`, `BEQ`, `BNE`) are needed to implement conditional statement and loop. (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 5, 6, and 20).
 
-### Datapath for instruction
+### Draw Datapath for Instructions
 [Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
 An example for MIN16 ALU type instructions:
 ![MIN16_Datpath_ALU_R](./doc/MIN16_Datapath_ALU_R.png)
 
-### Assembly language
+## Assembler
+
+### Detrmine Instruction Format
 Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted into the machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
 An example for MIN16 ADD instruction:
 ![MIN16_Instruction_ADD](./doc/MIN16_Instruction_ADD.png)
 
-### Assembler
+### Build a Tool Following Assembler Concepts
 Converting instructions assembly language into machine code is a simple task, but as a programming language it is more useful if a block of subroutine can be used by reference. Therefore, labels are usually used. Also, some C-like operators might help assembly programmers to save lines of code. These [assembler concepts](http://sites.fas.harvard.edu/~cscie287/fall2017/slides/Assembler%20Concepts.txt) are detailed in the CSCI E-93 course website.
 
 [Sample assembly program](./asm/parser/sample3.txt) implements those functions, if written in C:
@@ -88,56 +88,50 @@ void service(void);
 ```
 Assembler converts into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
-### Emulator
+## Emulator
 Emulator plays an important role before CPU is working properly. That means if your assebmly program and VHDL code both have bugs, it is difficult to debug. Therefore Emulator is a tool to make sure the assembly program is working as expected.
 
 For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mode, and line-by-line execution mode.
 
-#### Simple mode
-Executes without any debugging information.
+1. Simple mode - Executes without any debugging information.
 
-![MIN16_Emulator_Simple](./doc/MIN16_Emulator_Simple.png)
+<!-- ![MIN16_Emulator_Simple](./doc/MIN16_Emulator_Simple.png) -->
 
-#### Display register mode
-Add debugging information such as:
-- MIF Word address
-- HEX machine code
-- Memory Address (Program Counter)
-- Addressing Modes
-- Disassembled asembly code
-- Register Content highliting if value changed
-- Status Flag Register
+2. Display register mode - Add debugging information such as:
+    <!-- - MIF Word address -->
+    <!-- - HEX machine code -->
+    - Memory Address (Program Counter)
+    <!-- - Addressing Modes -->
+    - Disassembled asembly code
+    - Register Content highliting if value changed
+    <!-- - Status Flag Register -->
+    ![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
 
-![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
+3. Line-by-line execution mode - Add debugging information and executes line-by-line.
 
-#### Line-by-line execution mode
-Add debugging information and executes line-by-line.
+## CPU 
 
-### CPU written by VHDL
-CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine the following points:
+### Code with Hardware Discription Language
+CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should take into account of the following points:
 
-#### Sequencing Logic
+1. Sequencing Logic
+    - Control lines are determined by the sequencer (seq.vhd)
+    <!-- - The opcode + function code (opfunc: 6bits) identifies instructions -->
+    <!-- - ALU and Jump related control lines are determined only by opfunc  -->
+    - Branch control depends on Zero Flag
+    - Load/Store control lines are chosen by the state of FSM
 
-- Control lines are determined by the sequencer (seq.vhd)
-- The opcode + function code (opfunc: 6bits) identifies instructions
-- ALU and Jump related control lines are determined only by opfunc 
-- Branch control depends on opfunc and Zero Flag
-- Load/Store control lines are chosen by opfunc and the state of FSM
+2. Clocking Scheme
+    <!-- - **FSM for Memory and CPU is the core of computation** -->
+    - Rising edge: State transitions on CPU FSM
+    - Falling edge: Write Back to registers
+    - Memory FSM is implemented separately (memio.vhd)
 
-#### Clocking Scheme
+3. State transitions on Memory and CPU
+    - Memory handshaking method to be determined
+    - Finate State Machine (FSM) for CPU
 
-- Control lines are determined by the sequencer (seq.vhd)
-- The opcode + function code (opfunc: 6bits) identifies instructions
-- ALU and Jump related control lines are determined only by opfunc 
-- Branch control depends on opfunc and Zero Flag
-- Load/Store control lines are chosen by opfunc and the state of FSM
-
-#### State transitions on Memory and CPU
-
-- Memory handshaking method to be determined
-- Finate State Machine (FSM) for CPU
-
-![MIN16_FSM](./doc/MIN16_FSM.png)
+    ![MIN16_FSM](./doc/MIN16_FSM.png)
 
 ### Compile and build on the FPGA board
 Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) for compile and build.
@@ -156,7 +150,7 @@ Last step is to import mif file and write data to In-System memory.
 
 2. Write to In-System Memory
 
-    Note that the In-System memory data `6080` `22C0` `2040`... is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
+    ***Note***: In-System memory data `6080` `22C0` `2040`... is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
     ![MIN16_mif_write](./doc/MIN16_mif_write.png)
 
 ### Run your program
@@ -164,5 +158,5 @@ Now you can run your program! FPGA board comes with switches, buttons, and 7-seg
 
 ![MIN16_Diagnosis](./doc/MIN16_Diagnosis.png)
 
-### Future Topic
+# Future Topic
 Writing assembly program might be time consuming, therefore a compiler would be helpful for faster development.
