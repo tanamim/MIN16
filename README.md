@@ -96,14 +96,13 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
 1. Simple mode 
 Executes without any debugging information.
 
-<!-- ![MIN16_Emulator_Simple](./doc/MIN16_Emulator_Simple.png) -->
-
 2. Display register mode
 
     Add debugging information such as:
     - Memory Address (Program Counter)
     - Disassembled asembly code
     - Register Content highliting if value changed
+
     ![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
 
 3. Line-by-line execution mode 
