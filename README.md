@@ -155,9 +155,9 @@ Last step is to import mif file and write data to In-System memory.
     ![MIN16_mif_write](./doc/img/MIN16_mif_write.png)
 
 ### Run your program
-Now you can run your program! FPGA board comes with switches, buttons, and 7-segment LED. So you may want to set diagnostic pin assignments like [this](https://github.com/tanamim/MIN16/blob/8148a0d9e2879d7c079ccf923c0254c7d8426b94/cpu/min16/min16.vhd#L246).
+Now you can run your program! FPGA board comes with 7-segment LED, switches, and buttons. So you may want to set diagnostic pin assignments like [this](https://github.com/tanamim/MIN16/blob/8148a0d9e2879d7c079ccf923c0254c7d8426b94/cpu/min16/min16.vhd#L246).
 
 ![MIN16_Diagnosis](./doc/img/MIN16_Diagnosis.png)
 
-# Future Topic
-Writing assembly program might be time consuming, therefore a compiler would be helpful for faster development.
+# Further Development
+Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be helpful for effective development.
