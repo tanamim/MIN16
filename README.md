@@ -37,7 +37,7 @@ The development process comes with these 4 building blocks and goes in this orde
 ### Bit format
 Once word size is determined, how do you divide those bits into parts? Typical arithmetic machine instruction contains three components, Operation Code, Destination Regiser Identifier, and Source Register Identifier.
 
-For example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `0x001a`.
+For a general example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `0x001a`.
 ```markdown
 [opcode] [rd] [rs]
      ADD  $r1 $r10
@@ -59,10 +59,14 @@ All assembly mnemonics should be defined. In addition to ALU type instructions (
 ### Datapath for instruction
 [Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
-An example for ALU type instructions:
+An example for MIN16 ALU type instructions:
 ![MIN16_Datpath_ALU_R](./doc/MIN16_Datapath_ALU_R.png)
 
 ### Assembly language
+Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted to machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
+
+An example for MIN16 ADD instruction:
+![MIN16_Instruction_ADD](./doc/MIN16_Instruction_ADD.png)
 
 ### Assembler
 
