@@ -7,18 +7,18 @@ This document provides an overview of the development process from designing a c
 
 ## Building blocks
 
-The development process comes with these 4 building blocks and goes in this order.
+The development process comes with these 4 building blocks and goes in this order. The first step is to determine **word size** (i.e. how many bits are bound together to carry machine instruction on a digital circuit board). Then you will design bit format to prepare a set of instructions (Assembly language: `AND`, `OR`, `ADD`, `J`, etc). Such design document serves as a reference to assembly programmers. Once assembly language is ready, you need to build an assembler to convert to machine code. Emulator is quite useful to debug your assembler programs before CPU will be working correctly. Finally, CPU is described by hardware description language and should be debugged by your assembly program. You will burn your CPU to an FPGA board, load machine code to the memory, and run the program.
 
 | Directory | Description |
 | --------- |------------ |
-| doc       | Design documents and presentation materials are stored in this directory. [Instruction Set](./doc/MIN16_Instruction_Set.pdf) defines assembly language and its usage. This is a reference document for assembly programmer. [Datapath](./doc/MIN16_Datapath_ALL.pdf) defines digital circuit board and visualize how each instruction works on the board. |
+| doc       | Design documents and presentation materials are stored in this directory. [Instruction Set](./doc/MIN16_Instruction_Set.pdf) defines assembly language and its usage. [Datapath](./doc/MIN16_Datapath_ALL.pdf) defines digital circuit board and visualize how each instruction works on the board. |
 | asm       | [Assembler](./asm/parser/parser.c) is a tool to convert an [assembly program](./asm/parser/sample3.txt) into a [machine code](./asm/parser/sample3.mif). |
 | emu       | [Emulator](./emu/emulator.c) is a useful debugging tool that can simulate on your computer how assembly program should work on the MIN16 processor |
 | cpu       | This directory contains all of the VHDL for the [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
 
 ## Table of Contents
-1. [Register file](#register-file)
-2. [Bit format](#bit-format)
+1. [Bit format](#bit-format)
+2. [Register file](#register-file)
 3. [Instruction Set Architecture](#instruction-set-architecture)
 4. [Datapath for instruction](#datapath-for-instruction)
 5. [Assembly language](#assembly-language)
@@ -33,11 +33,24 @@ The development process comes with these 4 building blocks and goes in this orde
 14. [Jekyll Themes](#jekyll-themes)
 15. [Support or Contact](#support-or-contact)
 
-### Register file
-How many registers do you need?
-
 ### Bit format
-How do you divide bits into parts?
+Once word size is determined, how do you divide those bits into parts? Typical arithmetic machine instruction contains three components, Operation Code, Destination Regiser Identifier, and Source Register Identifier.
+
+For example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `0x001a`.
+```markdown
+[opcode] [rd] [rs]
+     ADD  $r1 $r10
+00000000 0001 1010
+
+ 15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
++---------------+--------------+---------------+---------------+
+|            OPCODE            |      RD       |      RS       |
+|             8bits            |     4bits     |     4bits     |
++---------------+--------------+---------------+---------------+
+```
+
+### Register file
+How many registers do you need? 
 
 ### Instruction Set Architecture
 All assembly mnemonics should be defined.
