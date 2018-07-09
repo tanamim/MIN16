@@ -33,6 +33,7 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
     2. [Compile and build](#compile-and-build)
     3. [Import and write to memory](#import-and-write-to-memory)
     4. [Run your program](#run-your-program)
+    5. [Watch Demonstration](#watch-demonstration)
 
 
 ## Design Documents
@@ -161,6 +162,9 @@ Last step is to import mif file and write data to In-System memory.
 Now you can run your program! FPGA board comes with 7-segment LED, switches, and buttons. So you may want to set diagnostic pin assignments like [this](https://github.com/tanamim/MIN16/blob/8148a0d9e2879d7c079ccf923c0254c7d8426b94/cpu/min16/min16.vhd#L246).
 
 ![MIN16_Diagnosis](./doc/img/MIN16_Diagnosis.png)
+
+### Watch Demonstration
+The presentation of MIN16 processor is available on [YouTube](https://youtu.be/znE2sqfCt8E).
 
 # Further Development
 Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be helpful for effective development.
