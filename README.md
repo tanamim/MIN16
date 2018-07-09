@@ -68,7 +68,7 @@ All assembly mnemonics should be defined. In addition to ALU type instructions (
 ### Draw Datapath for Instructions
 [Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
-An example for `ADD` instruction datapath (Only orange color is important here):
+An example for `ADD` instruction datapath (Only orange color is important):
 ![MIN16_Datpath_ALU_R](./doc/img/MIN16_Datapath_ALU_R.png)
 
 ## Assembler
