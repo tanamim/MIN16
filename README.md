@@ -26,6 +26,7 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
 2. [Assembler](#assembler)
     1. [Detrmine Instruction Format](#detrmine-instruction-format)
     2. [Build a Tool Following Assembler Concepts](#build-a-tool-following-assembler-concepts)
+    3. [Write Assembly Program](#write-assembly-program)
 3. [Emulator](#emulator)
 4. [CPU](#cpu)
     1. [Code with Hardware Discription Language](#code-with-hardware-discription-language)
@@ -75,6 +76,7 @@ An example for MIN16 ADD instruction format:
 ### Build a Tool Following Assembler Concepts
 Converting instructions assembly language into machine code is a simple task, but as a programming language it is more useful if a block of subroutine can be used by reference. Therefore, labels are usually used. Also, some C-like operators might help assembly programmers to save lines of code. These [assembler concepts](http://sites.fas.harvard.edu/~cscie287/fall2017/slides/Assembler%20Concepts.txt) are detailed in the CSCI E-93 course website.
 
+### Write Assembly Program
 [Sample assembly program](./asm/parser/sample3.txt) implements those functions, if written in C:
 ```C
 void putchar(char);
