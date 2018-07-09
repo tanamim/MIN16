@@ -18,8 +18,11 @@ This document provides an overview of the development process from designing a c
     2. [Display register mode](#display-register-mode)
     3. [Line-by-line execution mode](#line-by-line-execution-mode)
 9. [CPU written by VHDL](#cpu-written-by-vhdl)
-10. [Compile on FPGA](#compile-on-fpga)
-11. [Load memory initialization file](#load-memory-initialization-file)
+    1. [Sequencing Logic](#sequencing-logic)
+    2. [Clocking Scheme](#clocking-scheme)
+    3. [State transitions on Memory and CPU](#state-transitions-on-memory-and-cpu)
+10. [Compile and build on the FPGA board](#compile-and-build-on-the-fpga-board)
+11. [Import program to memory on the FPGA board](#import-program-to-memory-on-the-fpga-board)
 12. [Run your program](#run-your-program)
 
 ### Building blocks
@@ -109,10 +112,50 @@ Add debugging information such as:
 Add debugging information and executes line-by-line.
 
 ### CPU written by VHDL
+CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine the following points:
 
-### Compile on FPGA
+#### Sequencing Logic
 
-### Load memory initialization file
+- Control lines are determined by the sequencer (seq.vhd)
+- The opcode + function code (opfunc: 6bits) identifies instructions
+- ALU and Jump related control lines are determined only by opfunc 
+- Branch control depends on opfunc and Zero Flag
+- Load/Store control lines are chosen by opfunc and the state of FSM
+
+#### Clocking Scheme
+
+- Control lines are determined by the sequencer (seq.vhd)
+- The opcode + function code (opfunc: 6bits) identifies instructions
+- ALU and Jump related control lines are determined only by opfunc 
+- Branch control depends on opfunc and Zero Flag
+- Load/Store control lines are chosen by opfunc and the state of FSM
+
+#### State transitions on Memory and CPU
+
+- Memory handshaking method to be determined
+- Finate State Machine (FSM) for CPU
+
+![MIN16_FSM](./doc/MIN16_FSM.png)
+
+### Compile and build on the FPGA board
+Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) for compile and build.
+
+1. Compile
+![MIN16_CPU_Compile](./doc/MIN16_CPU_Compile.png)
+
+2. Build
+![MIN16_CPU_Build](./doc/MIN16_CPU_Build.png)
+
+### Import program to memory on the FPGA board
+Last step is to import mif file and write data to In-System memory.
+
+1. Import
+    ![MIN16_mif_import](./doc/MIN16_mif_import.png)
+
+2. Write to In-System Memory
+
+    Note that the In-System memory data `6080` `22C0` `2040` is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
+    ![MIN16_mif_write](./doc/MIN16_mif_write.png)
 
 ### Run your program
 
