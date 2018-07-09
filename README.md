@@ -14,6 +14,9 @@ This document provides an overview of the development process from designing a c
 6. [Assembly language](#assembly-language)
 7. [Assembler](#assembler)
 8. [Emulator](#emulator)
+    1. [Simple mode](#simple-mode)
+    2. [Display register mode](#display-register-mode)
+    3. [Line-by-line execution mode](#line-by-line-execution-mode)
 9. [CPU written by VHDL](#cpu-written-by-vhdl)
 10. [Compile on FPGA](#compile-on-fpga)
 11. [Load memory initialization file](#load-memory-initialization-file)
@@ -84,8 +87,30 @@ void service(void);
 ```
 Assembler converts into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
-
 ### Emulator
+Emulator plays an important role before CPU is working properly. That means if your assebmly program and VHDL code both have bugs, it is difficult to debug. Therefore Emulator is a tool to make sure the assembly program is working as expected.
+
+For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mode, and line-by-line execution mode.
+
+#### Simple mode
+Executes without any debugging information.
+
+![MIN16_Emulator_Simple](./doc/MIN16_Emulator_Simple.png)
+
+#### Display register mode
+Add debugging information such as:
+- MIF Word address
+- HEX machine code
+- Memory Address (Program Counter)
+- Addressing Modes
+- Disassembled asembly code
+- Register Content highliting if value changed
+- Status Flag Register
+
+![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
+
+#### Line-by-line execution mode
+Add debugging information and executes line-by-line.
 
 ### CPU written by VHDL
 
