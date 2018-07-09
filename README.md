@@ -63,7 +63,7 @@ All assembly mnemonics should be defined. In addition to ALU type instructions (
 [Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
 An example for `ADD` instruction datapath (Only orange color is important here):
-![MIN16_Datpath_ALU_R](./doc/MIN16_Datapath_ALU_R.png)
+![MIN16_Datpath_ALU_R](./doc/img/MIN16_Datapath_ALU_R.png)
 
 ## Assembler
 
@@ -71,7 +71,7 @@ An example for `ADD` instruction datapath (Only orange color is important here):
 Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted into the machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
 An example for MIN16 ADD instruction format:
-![MIN16_Instruction_ADD](./doc/MIN16_Instruction_ADD.png)
+![MIN16_Instruction_ADD](./doc/img/MIN16_Instruction_ADD.png)
 
 ### Build a Tool Following Assembler Concepts
 Converting instructions assembly language into machine code is a simple task, but as a programming language it is more useful if a block of subroutine can be used by reference. Therefore, labels are usually used. Also, some C-like operators might help assembly programmers to save lines of code. These [assembler concepts](http://sites.fas.harvard.edu/~cscie287/fall2017/slides/Assembler%20Concepts.txt) are detailed in the CSCI E-93 course website.
@@ -105,7 +105,7 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
         - Disassembled asembly code
         - Register Content highliting if value changed
 
-    ![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
+    ![MIN16_Emulator_Debug](./doc/img/MIN16_Emulator_Debug.png)
 
 3. Line-by-line execution mode
     - Add debugging information and executes line-by-line.
@@ -132,32 +132,32 @@ CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf
     - Memory handshaking method to be determined
     - Finate State Machine (FSM) for CPU
 
-    ![MIN16_FSM](./doc/MIN16_FSM.png)
+    ![MIN16_FSM](./doc/img/MIN16_FSM.png)
 
 ### Compile and build on the FPGA board
 Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) for compile and build.
 
 1. Compile
-![MIN16_CPU_Compile](./doc/MIN16_CPU_Compile.png)
+![MIN16_CPU_Compile](./doc/img/MIN16_CPU_Compile.png)
 
 2. Build
-![MIN16_CPU_Build](./doc/MIN16_CPU_Build.png)
+![MIN16_CPU_Build](./doc/img/MIN16_CPU_Build.png)
 
 ### Import program to memory on the FPGA board
 Last step is to import mif file and write data to In-System memory.
 
 1. Import
-    ![MIN16_mif_import](./doc/MIN16_mif_import.png)
+    ![MIN16_mif_import](./doc/img/MIN16_mif_import.png)
 
 2. Write to In-System Memory
 
     ***Note***: In-System memory data `6080` `22C0` `2040`... is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
-    ![MIN16_mif_write](./doc/MIN16_mif_write.png)
+    ![MIN16_mif_write](./doc/img/MIN16_mif_write.png)
 
 ### Run your program
-Now you can run your program! FPGA board comes with switches, buttons, and 7-segment LED. So you may want to set diagnostic pin assignments.
+Now you can run your program! FPGA board comes with switches, buttons, and 7-segment LED. So you may want to set diagnostic pin assignments like [this](https://github.com/tanamim/MIN16/blob/8148a0d9e2879d7c079ccf923c0254c7d8426b94/cpu/min16/min16.vhd#L246).
 
-![MIN16_Diagnosis](./doc/MIN16_Diagnosis.png)
+![MIN16_Diagnosis](./doc/img/MIN16_Diagnosis.png)
 
 # Future Topic
 Writing assembly program might be time consuming, therefore a compiler would be helpful for faster development.
