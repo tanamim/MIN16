@@ -61,7 +61,7 @@ All assembly mnemonics should be defined. In addition to ALU type instructions (
 ### Draw Datapath for Instructions
 [Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
-An example for MIN16 ALU type instructions:
+An example for `ADD` instruction datapath (Only orange color is important here):
 ![MIN16_Datpath_ALU_R](./doc/MIN16_Datapath_ALU_R.png)
 
 ## Assembler
@@ -69,7 +69,7 @@ An example for MIN16 ALU type instructions:
 ### Detrmine Instruction Format
 Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted into the machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
-An example for MIN16 ADD instruction:
+An example for MIN16 ADD instruction format:
 ![MIN16_Instruction_ADD](./doc/MIN16_Instruction_ADD.png)
 
 ### Build a Tool Following Assembler Concepts
