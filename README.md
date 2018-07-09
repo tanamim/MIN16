@@ -97,6 +97,7 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
     - Executes without any debugging information.
 
 2. Display register mode
+
     - Add debugging information such as:
         - Memory Address (Program Counter)
         - Disassembled asembly code
