@@ -21,7 +21,7 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
 1. [Design Documents](#design-documents)
     1. [Design Bit format](#design-bit-format)
     2. [Determine Register File](#determine-register-file)
-    3. [Document Instruction Set Architecture](#document-instruction-set-architecture)
+    3. [Document Instruction Set](#document-instruction-set)
     4. [Draw Datapath for Instructions](#draw-datapath-for-instructions)
 2. [Assembler](#assembler)
     1. [Detrmine Instruction Format](#detrmine-instruction-format)
@@ -29,9 +29,9 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
     3. [Write Assembly Program](#write-assembly-program)
 3. [Emulator](#emulator)
 4. [CPU](#cpu)
-    1. [Code with Hardware Discription Language](#code-with-hardware-discription-language)
-    2. [Compile and build on the FPGA board](#compile-and-build-on-the-fpga-board)
-    3. [Import program to memory on the FPGA board](#import-program-to-memory-on-the-fpga-board)
+    1. [Code with VHDL](#code-with-vhdl)
+    2. [Compile and build](#compile-and-build)
+    3. [Import and write to memory](#import-and-write-to-memory)
     4. [Run your program](#run-your-program)
 
 
@@ -56,7 +56,7 @@ For a general example, `ADD $r1, $r10` is an instruction to add the value of sou
 ### Determine Register File
 How many registers do you need? Above example uses 4bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operation codes. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2).
 
-### Document Instruction Set Architecture
+### Document Instruction Set
 All assembly mnemonics should be defined. In addition to ALU type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, etc), Memory Load and Store type instructions are needed (`LW`, `SW`) so that computer can interact with external input/output device. Also, Jump and Branch instructions (`J`, `JR`, `BEQ`, `BNE`) are needed to implement conditional statement and loop. (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 5, 6, and 20).
 
 ### Draw Datapath for Instructions
@@ -112,7 +112,7 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
 
 ## CPU 
 
-### Code with Hardware Discription Language
+### Code with VHDL
 CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should take into account of the following points:
 
 1. Sequencing Logic
@@ -134,8 +134,8 @@ CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf
 
     ![MIN16_FSM](./doc/img/MIN16_FSM.png)
 
-### Compile and build on the FPGA board
-Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) for compile and build.
+### Compile and build
+Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) to compile and build on your FPGA board.
 
 1. Compile
 ![MIN16_CPU_Compile](./doc/img/MIN16_CPU_Compile.png)
@@ -143,7 +143,7 @@ Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?
 2. Build
 ![MIN16_CPU_Build](./doc/img/MIN16_CPU_Build.png)
 
-### Import program to memory on the FPGA board
+### Import and write to memory
 Last step is to import mif file and write data to In-System memory.
 
 1. Import
