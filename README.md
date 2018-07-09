@@ -63,12 +63,27 @@ An example for MIN16 ALU type instructions:
 ![MIN16_Datpath_ALU_R](./doc/MIN16_Datapath_ALU_R.png)
 
 ### Assembly language
-Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted to machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
+Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted into the machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
 An example for MIN16 ADD instruction:
 ![MIN16_Instruction_ADD](./doc/MIN16_Instruction_ADD.png)
 
 ### Assembler
+Converting instructions assembly language into machine code is a simple task, but as a programming language it is more useful if a block of subroutine can be used by reference. Therefore, labels are usually used. Also, some C-like operators might help assembly programmers to save lines of code. These [assembler concepts](http://sites.fas.harvard.edu/~cscie287/fall2017/slides/Assembler%20Concepts.txt) are detailed in the CSCI E-93 course website.
+
+[Sample assembly program](./asm/parser/sample3.txt) implements those functions, if written in C:
+```C
+void putchar(char);
+int  getchar(void);
+void putString(char*);
+void getString(char*);
+void intToString(int);
+int  stringToInt(char*);
+int  multiply(int a, int b);
+void service(void);
+```
+Assembler converts into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
+
 
 ### Emulator
 
