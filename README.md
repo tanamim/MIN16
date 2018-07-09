@@ -41,7 +41,10 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
 The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown beloc, typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
 For a general example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `001a`.
-```C
+
+![MIN16_Bit_Format](./doc/img/MIN16_Bit_Format.png)
+
+<!-- ```C
 [opcode] [rd] [rs]
      ADD  $r1 $r10
 00000000 0001 1010
@@ -51,7 +54,7 @@ For a general example, `ADD $r1, $r10` is an instruction to add the value of sou
 |            OPCODE            |      RD       |      RS       |
 |             8bits            |     4bits     |     4bits     |
 +---------------+--------------+---------------+---------------+
-```
+``` -->
 
 ### Determine Register File
 How many registers do you need? Above example uses 4bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operation codes. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2).
