@@ -94,10 +94,9 @@ Emulator plays an important role before CPU is working properly. That means if y
 For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mode, and line-by-line execution mode.
 
 1. Simple mode 
-Executes without any debugging information.
+    Executes without any debugging information.
 
 2. Display register mode
-
     Add debugging information such as:
     - Memory Address (Program Counter)
     - Disassembled asembly code
@@ -105,8 +104,8 @@ Executes without any debugging information.
 
     ![MIN16_Emulator_Debug](./doc/MIN16_Emulator_Debug.png)
 
-3. Line-by-line execution mode 
-Add debugging information and executes line-by-line.
+3. Line-by-line execution mode
+    Add debugging information and executes line-by-line.
 
 ## CPU 
 
