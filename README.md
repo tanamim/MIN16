@@ -82,7 +82,7 @@ An example for `ADD` instruction datapath (Only orange color is important):
 ## Assembler
 
 ### Detrmine Instruction Format
-Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the format, Operation, and how the instruction will be converted into the machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
+Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the **format**, the **operation**, and the **example** how the instruction will be converted into machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
 An example for MIN16 ADD instruction format:
 ![MIN16_Instruction_ADD](./doc/img/MIN16_Instruction_ADD.png)
@@ -105,7 +105,7 @@ int  multiply(int a, int b);
 Assembler converts assembly code into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
 ## Emulator
-If your assembly program and VHDL code both have bugs, it is difficult to debug. Therefore, Emulator is a tool to make sure the assembly program is working as expected. 
+If your assembly program and VHDL code both have bugs, it is difficult to debug. Therefore, emulator helps you make sure the assembly program works as expected.
 
 For the MIN16 emulator, three modes are prepared. Simple mode, display register mode, and line-by-line execution mode.
 
