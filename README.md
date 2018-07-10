@@ -97,9 +97,9 @@ void service(void);
 Assembler converts into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
 ## Emulator
-Emulator plays an important role before CPU is working properly. That means if your assebmly program and VHDL code both have bugs, it is difficult to debug. Therefore Emulator is a tool to make sure the assembly program is working as expected.
+If your assembly program and VHDL code both have bugs, it is difficult to debug. Therefore, Emulator is a tool to make sure the assembly program is working as expected. 
 
-For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mode, and line-by-line execution mode.
+For the MIN16 emulator, three modes are prepared. Simple mode, display register mode, and line-by-line execution mode.
 
 1. Simple mode 
     - Executes without any debugging information.
@@ -108,8 +108,8 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
 
     - Add debugging information such as:
         - Memory Address (Program Counter)
-        - Disassembled asembly code
-        - Register Content highliting if value changed
+        - Disassembled assembly code
+        - Register Content highlighting if value changed
 
     ![MIN16_Emulator_Debug](./doc/img/MIN16_Emulator_Debug.png)
 
@@ -119,7 +119,7 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
 ## CPU 
 
 ### Code with VHDL
-CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should take into account of the following points:
+CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should take into account of the following three points:
 
 1. Sequencing Logic
     - Control lines are determined by the sequencer ([seq.vhd](./cpu/min16/seq.vhd))
