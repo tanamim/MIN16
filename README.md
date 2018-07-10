@@ -22,6 +22,10 @@ Design instruction set and datapath -> Make assembler -> Debug with emulator -> 
 ### Demonstration
 The presentation of MIN16 processor is available on [YouTube](https://youtu.be/znE2sqfCt8E).
 
+### Books
+- [Contemporary Logic Design, Second Edition; Randy H. Katz and Gaetano Borriello; Prentice Hall Inc., 2005](https://www.pearson.com/us/higher-education/program/Katz-Contemporary-Logic-Design-2nd-Edition/PGM13030.html)
+- [Computer Organization and Design: The Hardware/Software Interface, Fifth Edition; David A. Patterson and John L. Hennessy; Morgan Kaufmann/Elsevier, September 2013](https://www.elsevier.com/books/computer-organization-and-design/patterson/978-0-12-407726-3)
+
 
 # Table of Contents
 1. [Design Documents](#design-documents)
