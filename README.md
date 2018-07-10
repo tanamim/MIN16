@@ -127,7 +127,7 @@ For the MIN16 emulator, three modes are prepared. Simple mode, display register 
 ## CPU 
 
 ### Code with VHDL
-CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine of the following three points:
+CPU, including ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine the following three points:
 
 1. Sequencing Logic
     - Control lines are determined by the sequencer ([seq.vhd](./cpu/min16/seq.vhd))
