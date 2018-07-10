@@ -3,7 +3,7 @@ Let's design your CPU
 
 ### Introduction
 
-This document provides an overview of the development process from designing a computer processor to build onto a chip via programmable way. Field Programmable Gate Array ([FPGA](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)) is used to actually build a chip. The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, source code for MIN16 processor, sample assembly program, and useful tools are provided.
+This document provides an overview of the development process of designing a computer processor to build onto a chip via programmable way. Field Programmable Gate Array ([FPGA](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)) is used. The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, source code for MIN16 processor, sample assembly program, and useful tools are provided.
 
 ### Four Steps
 
@@ -41,9 +41,9 @@ The presentation of MIN16 processor is available on [YouTube](https://youtu.be/z
 ## Design Documents
 
 ### Design Bit format
-The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown beloc, typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
+The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown below, typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
-For a general example, `ADD $r1, $r10` is an instruction to add the value of source register 10 to destination register 1. This instruction is represented in Hex digit as `001a`.
+By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal digit as `001a`. This is an instruction to add the value of source register 10 to destination register 1. 
 
 ![MIN16_Bit_Format](./doc/img/MIN16_Bit_Format.png)
 
@@ -122,17 +122,14 @@ For the MIN16 emulator, 3 modes are preapared. Simple mode, display register mod
 CPU, ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should take into account of the following points:
 
 1. Sequencing Logic
-    - Control lines are determined by the sequencer (seq.vhd)
-    <!-- - The opcode + function code (opfunc: 6bits) identifies instructions -->
-    <!-- - ALU and Jump related control lines are determined only by opfunc  -->
+    - Control lines are determined by the sequencer ([seq.vhd](./cpu/min16/seq.vhd))
     - Branch control depends on Zero Flag
     - Load/Store control lines are chosen by the state of FSM
 
 2. Clocking Scheme
-    <!-- - **FSM for Memory and CPU is the core of computation** -->
     - Rising edge: State transitions on CPU FSM
     - Falling edge: Write Back to registers
-    - Memory FSM is implemented separately (memio.vhd)
+    - Memory FSM is implemented separately ([memio.vhd](./cpu/min16/memio.vhd))
 
 3. State transitions on Memory and CPU
     - Memory handshaking method to be determined
