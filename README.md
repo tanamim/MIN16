@@ -3,7 +3,10 @@ Let's design your CPU
 
 ### Introduction
 
-In this guide, you will learn all you have to design a computer processor and to build onto a chip via programmable way. This guide is perfect for people who have some experience with digital logic and gates and with programming in assembler language. After learning the process, you'll be able to design and build your CPU using Field Programmable Gate Array ([FPGA](ttps://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)). The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, the source code for MIN16 processor, sample assembly program, and useful tools are provided.
+In this guide, you will learn all you have to design a computer processor and to build onto a chip via programmable way. This guide is perfect for people who have some experience with digital logic and gates and with programming in assembler language. After learning the process, you'll be able to design and build your CPU using Field Programmable Gate Array ([FPGA](ttps://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)). 
+
+
+The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, the source code for MIN16 processor, sample assembly program, and useful tools are provided.
 
 ### Four Steps
 
