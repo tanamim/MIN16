@@ -49,7 +49,7 @@ If you are not familiar with logic design nor computer architecture, don't worry
 ## Design Documents
 
 ### Design Bit format
-The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown below, typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
+The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown below, a typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
 By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal digit as `001a`. This is an instruction to add the value of source register 10 to destination register 1. 
 
