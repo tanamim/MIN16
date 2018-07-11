@@ -10,7 +10,10 @@ The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard 
 
 ### Four Steps
 
-Design instruction set and datapath -> Make assembler -> Debug with emulator -> Build CPU
+1. Design instruction set and datapath
+2. Make assembler
+3. Debug with emulator
+4. Build CPU
 
 | Directory | Description |
 | --------- |------------ |
