@@ -47,7 +47,6 @@ If you are not familiar with logic design nor computer architecture, don't worry
     2. [Compile and Build](#compile-and-build)
     3. [Import and Write to Memory](#import-and-write-to-memory)
     4. [Run Your Program](#run-your-program)
-5. [Questions?](#questions)
 
 
 ## Design Documents
@@ -178,5 +177,5 @@ Now you can run your program! FPGA board comes with 7-segment LED, switches, and
 # Further Development
 Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be another helpful tool for effective development.
 
-## Questions?
+# Questions?
 If you need help or have suggestions, you are welcome to create an issue on the GitHub repository. Thanks!
