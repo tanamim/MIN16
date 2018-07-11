@@ -30,7 +30,7 @@ If you are not familiar with logic design nor computer architecture, don't worry
 
 # Table of Contents
 1. [Design Documents](#design-documents)
-    1. [Design Bit format](#design-bit-format)
+    1. [Design Bit Format](#design-bit-format)
     2. [Determine Register File](#determine-register-file)
     3. [Document Instruction Set](#document-instruction-set)
     4. [Draw Datapath for Instructions](#draw-datapath-for-instructions)
@@ -41,14 +41,14 @@ If you are not familiar with logic design nor computer architecture, don't worry
 3. [Emulator](#emulator)
 4. [CPU](#cpu)
     1. [Code with VHDL](#code-with-vhdl)
-    2. [Compile and build](#compile-and-build)
-    3. [Import and write to memory](#import-and-write-to-memory)
-    4. [Run your program](#run-your-program)
+    2. [Compile and Build](#compile-and-build)
+    3. [Import and Write to Memory](#import-and-write-to-memory)
+    4. [Run Your Program](#run-your-program)
 
 
 ## Design Documents
 
-### Design Bit format
+### Design Bit Format
 The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown below, a typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
 By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal digit as `001a`. This is an instruction to add the value of source register 10 to destination register 1. 
@@ -105,7 +105,7 @@ int  multiply(int a, int b);
 Assembler converts assembly code into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
 ## Emulator
-If your assembly program and VHDL code both have bugs, it is difficult to debug. Emulator is a useful tool to make sure the assembly program works as expected.
+If both of your assembly program and VHDL code have bugs, it is difficult to debug. Emulator is a useful tool to make sure the assembly program works as expected.
 
 For the MIN16 emulator, three modes are prepared. Simple mode, display register mode, and line-by-line execution mode.
 
@@ -146,7 +146,7 @@ CPU, including ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapa
 
     ![MIN16_FSM](./doc/img/MIN16_FSM.png)
 
-### Compile and build
+### Compile and Build
 Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) to compile and build on your FPGA board.
 
 1. Compile
@@ -155,7 +155,7 @@ Once CPU is written, use [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?
 2. Build
 ![MIN16_CPU_Build](./doc/img/MIN16_CPU_Build.png)
 
-### Import and write to memory
+### Import and Write to Memory
 Last step is to import mif file and write data to In-System memory.
 
 1. Import
@@ -166,10 +166,13 @@ Last step is to import mif file and write data to In-System memory.
     ***Note***: In-System memory data `6080` `22C0` `2040`... is the same as [Sample mif file](https://github.com/tanamim/MIN16/blob/66134dbe52fb1120390e9fd9deb131f4e08c2c49/asm/parser/sample3.mif#L7).
     ![MIN16_mif_write](./doc/img/MIN16_mif_write.png)
 
-### Run your program
+### Run Your Program
 Now you can run your program! FPGA board comes with 7-segment LED, switches, and buttons. So you may want to set diagnostic pin assignments like [this](https://github.com/tanamim/MIN16/blob/8148a0d9e2879d7c079ccf923c0254c7d8426b94/cpu/min16/min16.vhd#L246).
 
 ![MIN16_Diagnosis](./doc/img/MIN16_Diagnosis.png)
 
 # Further Development
 Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be another helpful tool for effective development.
+
+# Questions?
+If you have any problems or suggestions, you are welcome to create an issue on my GitHub repository. Thanks!
