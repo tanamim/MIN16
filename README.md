@@ -175,4 +175,4 @@ Now you can run your program! FPGA board comes with 7-segment LED, switches, and
 Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be another helpful tool for effective development.
 
 # Questions?
-If you have any problems or suggestions, you are welcome to create an issue on my GitHub repository. Thanks!
+If you need help or have suggestions, you are welcome to create an issue on the GitHub repository. Thanks!
