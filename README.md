@@ -20,7 +20,7 @@ The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard 
 | doc       | Design documents and presentation materials are stored in this directory. [Instruction Set](./doc/MIN16_Instruction_Set.pdf) defines assembly language and its usage. [Datapath](./doc/MIN16_Datapath_ALL.pdf) defines digital circuit board and visualize how each instruction works on the board. |
 | asm       | [Assembler](./asm/parser/parser.c) is a tool to convert an [assembly program](./asm/parser/sample3.txt) into a [machine code](./asm/parser/sample3.mif). |
 | emu       | [Emulator](./emu/emulator.c) is a useful debugging tool that can simulate on your computer how assembly program should work on the MIN16 processor |
-| cpu       | This directory contains all of the VHDL for the [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
+| cpu       | This directory contains all the VHDL code for the [MIN16 processor](./cpu/min16/min16.vhd), including the [ALU](./cpu/min16/alu.vhd). |
 
 ### Demonstration
 The presentation of MIN16 processor is available on [YouTube](https://youtu.be/znE2sqfCt8E).
@@ -42,6 +42,7 @@ If you are not familiar with logic design nor computer architecture, don't worry
     2. [Build Assembler](#build-assembler)
     3. [Write Assembly Program](#write-assembly-program)
 3. [Emulator](#emulator)
+    1. [Create Emulator with Debugging Information](#create-emulator-with-debugging-information)
 4. [CPU](#cpu)
     1. [Code with VHDL](#code-with-vhdl)
     2. [Compile and Build](#compile-and-build)
@@ -54,7 +55,7 @@ If you are not familiar with logic design nor computer architecture, don't worry
 ### Design Bit Format
 The first step is to determine **word size** (i.e., how many bits are bound together to carry machine instruction on a digital circuit board). Once word size is determined, how do you divide those bits into parts? As shown below, a typical arithmetic instruction contains three components, **Operation Code**, **Destination Regiser**, and **Source Register**.
 
-By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal digit as `001a`. This is an instruction to add the value of source register 10 to destination register 1. 
+By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal digit as `001a`. This is an instruction to add the value of source register 10 to the value of destination register 1 and store the result to the destination resister.
 
 ![MIN16_Bit_Format](./doc/img/MIN16_Bit_Format.png)
 
@@ -71,13 +72,13 @@ By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal di
 ``` -->
 
 ### Determine Register File
-How many registers do you need? Above example uses four bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operation codes. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2).
+How many registers do you need? Above example uses four bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operations. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2.
 
 ### Document Instruction Set
-All assembly mnemonics should be defined. In addition to ALU type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, etc), Memory Load and Store type instructions are needed (`LW`, `SW`) so that computer can interact with external input/output device. Also, Jump and Branch instructions (`J`, `JR`, `BEQ`, `BNE`) are needed to implement conditional statement and loop. (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 5, 6, and 20).
+All assembly mnemonics should be defined. In addition to ALU type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, etc), Memory Load and Store type instructions are needed (`LW`, `SW`) so that the computer can interact with external input/output devices. Also, Jump and Branch instructions (`J`, `JR`, `BEQ`, `BNE`) are needed to implement conditional statements and loops. (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 5, 6, and 20).
 
 ### Draw Datapath for Instructions
-[Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU unit that should later be described by VHDL code. It should precisely determine the size of bits sliced from instruction register and then extended, manipulated by ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
+[Datapath](./doc/MIN16_Datapath_ALL.pdf) is a blueprint of the CPU, including Memory and ALU units that should later be described by VHDL code. It should precisely determine the size of bits sliced from the instruction register and then extended, manipulated by the ALU. Highlighting what information is used for the specific instruction is useful for debugging VHDL code.
 
 An example for `ADD` instruction datapath (Only orange color is important):
 ![MIN16_Datpath_ALU_R](./doc/img/MIN16_Datapath_ALU_R.png)
@@ -85,7 +86,7 @@ An example for `ADD` instruction datapath (Only orange color is important):
 ## Assembler
 
 ### Detrmine Instruction Format
-Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmer. It will describe the **format**, the **operation**, and the **example** how the instruction will be converted into machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
+Once all the assembly mnemonics are prepared, a reference document should be prepared for assembly programmers. It will describe the **format**, the **operation**, and the **example** how the instruction will be converted into machine code. MIN16 prepared 46 assemly mnemonics (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 8 to 19).
 
 An example for MIN16 ADD instruction format:
 ![MIN16_Instruction_ADD](./doc/img/MIN16_Instruction_ADD.png)
@@ -108,8 +109,9 @@ int  multiply(int a, int b);
 Assembler converts assembly code into machine language, and the output format is called memory instruction file (mif) format [[Sample](./asm/parser/sample3.mif)]. Before running your processor, you will manually load the mif file into the memory in FPGA board using a software tool provided by FPGA vender. For the development of MIN16, [Quartus II Web Edition](http://dl.altera.com/13.0sp1/?edition=web) (free version) is used.
 
 ## Emulator
-If both of your assembly program and VHDL code have bugs, it is difficult to debug. Emulator is a useful tool to make sure the assembly program works as expected.
+If both of your assembly program and VHDL code have bugs, it will be difficult to debug. Emulator is a useful tool to make sure the assembly program works as expected.
 
+### Create Emulator with Debugging Information
 For the MIN16 emulator, three modes are prepared. Simple mode, display register mode, and line-by-line execution mode.
 
 1. Simple mode 
@@ -130,10 +132,10 @@ For the MIN16 emulator, three modes are prepared. Simple mode, display register 
 ## CPU 
 
 ### Code with VHDL
-CPU, including ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine the following three points:
+CPU, including ALU is written by VHDL to represent [Datapath](./doc/MIN16_Datapath_ALL.pdf). In addition, you should determine the following three mechanisms:
 
 1. Sequencing Logic
-    - Control lines are determined by the sequencer ([seq.vhd](./cpu/min16/seq.vhd))
+    - The sequencer ([seq.vhd](./cpu/min16/seq.vhd)) determines all the control lines
     - Branch control depends on Zero Flag
     - Load/Store control lines are chosen by the state of FSM
 
@@ -175,7 +177,7 @@ Now you can run your program! FPGA board comes with 7-segment LED, switches, and
 ![MIN16_Diagnosis](./doc/img/MIN16_Diagnosis.png)
 
 # Further Development
-Writing assembly program might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be another helpful tool for effective development.
+Writing assembly programs might be time-consuming. The sample assembly program shows that writing `void putchar(char)` in assembly requires about 30 lines of code. Therefore, a compiler would be another helpful tool for effective development.
 
 # Questions?
 If you need help or have suggestions, you are welcome to create an issue on the GitHub repository. Thanks!
