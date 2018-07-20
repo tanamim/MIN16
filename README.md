@@ -3,7 +3,7 @@ Let's design your CPU
 
 ### Introduction
 
-In this guide, you will learn how to design a computer processor and to build onto a chip via programmable way. This guide is perfect for people who have some experience with digital logic and gates and with programming in assembler language. After learning this step-by-step guide, you'll be able to design and build your own CPU using Field Programmable Gate Array ([FPGA](ttps://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)).
+In this guide, you will learn how to design a computer processor and build it onto a chip via programming. This guide is perfect for people who have some experience with digital logic and gates and with programming in assembler language. After learning this step-by-step guide, you'll be able to create your own CPU using Field Programmable Gate Array ([FPGA](ttps://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=502)).
 
 
 The MIN16 processor is a 16-bit CPU that was built as a term project at Harvard ([CSCI E-93](http://sites.fas.harvard.edu/~cscie287/fall2017/)). In this repository, the source code for MIN16 processor, sample assembly program, and useful tools are provided.
@@ -35,7 +35,7 @@ If you are not familiar with logic design nor computer architecture, don't worry
 1. [Design Documents](#design-documents)
     1. [Design Bit Format](#design-bit-format)
     2. [Determine Register File](#determine-register-file)
-    3. [Document Instruction Set](#document-instruction-set)
+    3. [Develop Instruction Set](#develop-instruction-set)
     4. [Draw Datapath for Instructions](#draw-datapath-for-instructions)
 2. [Assembler](#assembler)
     1. [Detrmine Instruction Format](#detrmine-instruction-format)
@@ -74,7 +74,7 @@ By using the basic example below, `ADD $r1, $r10` is expressed in hexadecimal di
 ### Determine Register File
 How many registers do you need? Above example uses four bits to identify register, therefore 16 registers are available for computation. The more register number, the more temporary calculation space. But it will limit the number of operations. Therefore, you need to find a balance. MIN16 defined 16 registers on [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 2.
 
-### Document Instruction Set
+### Develop Instruction Set
 All assembly mnemonics should be defined. In addition to ALU type instructions (`ADD`, `SUB`, `AND`, `OR`, `XOR`, etc), Memory Load and Store type instructions are needed (`LW`, `SW`) so that the computer can interact with external input/output devices. Also, Jump and Branch instructions (`J`, `JR`, `BEQ`, `BNE`) are needed to implement conditional statements and loops. (See [Instruction Set](./doc/MIN16_Instruction_Set.pdf) page 5, 6, and 20).
 
 ### Draw Datapath for Instructions
